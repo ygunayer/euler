@@ -14,12 +14,14 @@ The resulting output will be in the following format:
 ##### Example
 
 ```
-> test-only euler.Problem1```
+> test-only euler.Problem1
+```
 
 ```
 [info] Problem1:
 [info] - Problem #1
-[info]   + Result: 234168 (0 ms)```
+[info]   + Result: 234168 (0 ms)
+```
 
 **Note:** Only tested in Scala 2.10.4
 
