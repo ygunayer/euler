@@ -362,7 +362,7 @@ class Problem15 extends Problem(15) {
  */
 class Problem16 extends Problem(16) {
   def solve(): Any = {
-    BigInt(2).pow(1000).toString.map(_ - 48).sum
+    BigInt(2).pow(1000).toString.map(_.asDigit).sum
   }
 }
 
@@ -514,5 +514,5 @@ class Problem19 extends Problem(19) {
  * Find the sum of the digits in the number 100!
  */
 class Problem20 extends Problem(20) {
-  def solve(): Any = Utils.factorial(100).toString.map(_.toInt - 48).sum
+  def solve(): Any = Utils.factorial(100).toString.map(_.asDigit).sum
 }

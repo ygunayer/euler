@@ -166,5 +166,6 @@ class Problem9 extends Problem(9) {
  * Find the sum of all the primes below two million.
  */
 class Problem10 extends Problem(10) {
-  def solve: Any = (2L to 2000000).filter(SimplePrimeCheck.isPrime).sum
+  lazy val primeSieve = new SievedPrimeCheck(2000000)
+  def solve: Any = (2L to 2000000).filter(primeSieve.isPrime).sum
 }
