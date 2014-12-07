@@ -14,10 +14,10 @@ object SimplePrimeCheck extends PrimeCheck {
 
 class SievedPrimeCheck(size: Int) extends PrimeCheck {
   private lazy val sieve = buildSieve(size)
-  
+
   // http://rosettacode.org/wiki/Sieve_of_Eratosthenes#Genuine_Eratosthenes_sieve
   def buildSieve(limit: Int) = {
-    if(limit > Int.MaxValue)
+    if (limit > Int.MaxValue)
       throw new Error("Cannot build a sieve larger than " + Int.MaxValue)
     val (primes: collection.mutable.Set[Int], sqrtLimit) = (collection.mutable.Set.empty ++ (2 to limit), math.sqrt(limit).toInt)
     @tailrec
@@ -35,12 +35,18 @@ class SievedPrimeCheck(size: Int) extends PrimeCheck {
 }
 
 object Utils {
+  implicit class RichInt(n: Int) {
+    def digits: Seq[Int] = n.toString.map(_.asDigit)
+  }
+
   def factorial(x: Int): BigInt = (BigInt(1) to x).product
 
   def fibonacci: Stream[BigInt] = {
     def tail(h: BigInt, n: BigInt): Stream[BigInt] = h #:: tail(n, h + n)
     tail(0, 1)
   }
+  
+  def gcd(a: Int, b: Int): Int = if(a == 0) b else gcd(b % a, a)
 
   def isPrime(x: Int)(implicit c: PrimeCheck = SimplePrimeCheck) = c.isPrime(x)
 
