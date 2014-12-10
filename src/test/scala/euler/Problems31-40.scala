@@ -107,19 +107,144 @@ class Problem35 extends Problem(35) {
   def solve: Any = {
     val lim = 1000000
     lazy val sieve = new SievedPrimeCheck(lim)
-    
+
     def rotations(x: List[Int]): Set[List[Int]] = {
       def rotateOnce(a: List[Int]): List[Int] = a.tail :+ a.head
       def rotateAcc(c: List[Int], acc: List[List[Int]]): List[List[Int]] = {
-        if(c == x) acc
+        if (c == x) acc
         else rotateAcc(rotateOnce(c), c :: acc)
       }
       val rot0 = rotateOnce(x)
       rotateAcc(rot0, List(x, rot0)).toSet
     }
-    
+
     def toNum(x: Seq[Int]): Int = x.reduceLeft((a, b) => 10 * a + b)
     def isValid(x: Int): Boolean = rotations(x.digits.toList).forall(p => sieve.isPrime(toNum(p)))
     (1 to lim).count(isValid)
+  }
+}
+
+/**
+ * The decimal number, 585 = 1001001001 (binary), is palindromic in both bases.
+ *
+ * Find the sum of all numbers, less than one million, which are palindromic in base 10 and base 2.
+ *
+ * (Please note that the palindromic number, in either base, may not include leading zeros.)
+ */
+class Problem36 extends Problem(36) {
+  def solve: Any = {
+    def isPalindrome(s: String): Boolean = s.reverse == s
+    (1 to 1000000).filter(x => isPalindrome(x.toBinaryString) && isPalindrome(x.toString)).sum
+  }
+}
+
+/**
+ * The number 3797 has an interesting property. Being prime itself, it is possible to continuously remove digits from left to right, and remain prime at each stage: 3797, 797, 97, and 7.
+ * Similarly we can work from right to left: 3797, 379, 37, and 3.
+ *
+ * Find the sum of the only eleven primes that are both truncatable from left to right and right to left.
+ *
+ * NOTE: 2, 3, 5, and 7 are not considered to be truncatable primes.
+ */
+class Problem37 extends Problem(37) {
+  def solve: Any = {
+    val lim = 1000000
+    lazy val sieve = new SievedPrimeCheck(lim)
+
+    def toNum(x: Seq[Int]): Int = x.reduceLeft((a, b) => 10 * a + b)
+
+    // very dirty implementation
+    def isTruncatableLTR(x: Int): Boolean = {
+      val isPrime = sieve.isPrime(x)
+      if (!isPrime) false
+      else if (x < 10) isPrime
+      else {
+        val r = toNum(x.digits.tail)
+        isTruncatableLTR(r)
+      }
+    }
+
+    def isTruncatableRTL(x: Int): Boolean = {
+      val isPrime = sieve.isPrime(x)
+      if (!isPrime) false
+      else if (x < 10) isPrime
+      else {
+        val r = toNum(x.digits.reverse.tail.reverse)
+        isTruncatableRTL(r)
+      }
+    }
+
+    def isTruncatable(x: Int): Boolean = isTruncatableLTR(x) && isTruncatableRTL(x)
+
+    (11 to lim).filter(isTruncatable).sum
+  }
+}
+
+/**
+ * Take the number 192 and multiply it by each of 1, 2, and 3:
+ *
+ * 192 × 1 = 192
+ * 192 × 2 = 384
+ * 192 × 3 = 576
+ *
+ * By concatenating each product we get the 1 to 9 pandigital, 192384576. We will call 192384576 the concatenated product of 192 and (1,2,3)
+ *
+ * The same can be achieved by starting with 9 and multiplying by 1, 2, 3, 4, and 5, giving the pandigital, 918273645, which is the concatenated product of 9 and (1,2,3,4,5).
+ *
+ * What is the largest 1 to 9 pandigital 9-digit number that can be formed as the concatenated product of an integer with (1,2, ... , n) where n > 1?
+ */
+class Problem38 extends Problem(38) {
+  def solve: Any = {
+    def multiples(x: Int, n: Int): List[Int] = (1 to n).map(_ * x).toList
+    def isPandigital(p: List[Int]): Boolean = p.mkString("").sorted == "123456789"
+
+    val candidates = for {
+      x <- 1 to 10000
+      n <- 1 to 9
+    } yield multiples(x, n)
+
+    candidates.filter(isPandigital).map(_.mkString("").toInt).max
+  }
+}
+
+/**
+ * If p is the perimeter of a right angle triangle with integral length sides, {a,b,c}, there are exactly three solutions for p = 120.
+ *
+ * {20,48,52}, {24,45,51}, {30,40,50}
+ *
+ * For which value of p ≤ 1000, is the number of solutions maximised?
+ */
+class Problem39 extends Problem(39) {
+  def solve: Any = {
+    val candidates = for {
+      c <- 1 until 500
+      a <- 1 until c
+      b <- 1 until c
+      p = a + b + c
+      if (p <= 1000 && (c * c == a * a + b * b))
+    } yield (a, b, c, p)
+    candidates.groupBy(_._4).maxBy(_._2.size)._1
+  }
+}
+
+/**
+ * An irrational decimal fraction is created by concatenating the positive integers:
+ *
+ * 0.123456789101112131415161718192021...
+ *
+ * It can be seen that the 12th digit of the fractional part is 1.
+ *
+ * If d_n represents the nth digit of the fractional part, find the value of the following expression.
+ *
+ * d_1 × d_10 × d_100 × d_1000 × d_10000 × d_100000 × d_1000000
+ */
+class Problem40 extends Problem(40) {
+  def solve: Any = {
+    val fraction = (1 to 200000).mkString("") // an upper limit of 200000 is enough to construct a fraction of over 1000000 digits
+    val digits = for {
+      i <- 0 to 6
+      n = Math.pow(10, i).toInt
+    } yield fraction(n - 1).asDigit
+    digits.product
   }
 }
