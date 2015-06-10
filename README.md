@@ -23,8 +23,6 @@ The resulting output will be in the following format:
 [info]   + Result: 234168 (0 ms)
 ```
 
-**Note:** Only tested in Scala 2.10.4
-
 ### License
 
 [Public Domain](http://choosealicense.com/licenses/unlicense/), or in other words, do whatever you want with it, but I provide no warranties of any kind so I can't be held responsible for any damages it may cause.
