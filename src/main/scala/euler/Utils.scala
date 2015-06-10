@@ -64,4 +64,12 @@ object Utils {
 
   def divisorsOf(x: Long): Set[Long] = (2L to x / 2).filter(x % _ == 0).toSet + 1
   def isAbundant(n: Int): Boolean = divisorsOf(n).sum > n
+  def isPentagonal(n: Long) = {
+    val x = (Math.sqrt(1 + 24 * n) + 1) / 6
+    x == Math.floor(x)
+  }
+  def isHexagonal(n: Long) = {
+    val x = (Math.sqrt(1 + 8 * n) + 1) / 4
+    x == Math.floor(x)
+  }
 }
